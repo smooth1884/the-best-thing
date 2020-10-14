@@ -14,6 +14,6 @@ CREATE TABLE imgs
     img_id SERIAL PRIMARY KEY,
     id INT NOT NULL,
     img_name text NOT NULL,
-    img BYTEA NOT NULL,
+    img_url text NOT NULL,
     FOREIGN KEY (id) REFERENCES things(id)
 );

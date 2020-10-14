@@ -25,7 +25,6 @@ export const ThingsDetails = (props) => {
   const uploadHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log(img);
       const response = await FetchThings.post(`/${id}/uploadimg`, {
         img: img,
         name: img.name,
@@ -43,8 +42,14 @@ export const ThingsDetails = (props) => {
       </div>
       <h3></h3>
       <p>{description}</p>
-      <input type="file" onChange={(e) => setImg(e.target.files[0])} />
-      <button onClick={uploadHandler}>Upload</button>
+      <form
+        action={`http://localhost:3001/${id}/uploadimg`}
+        method="post"
+        encType="multipart/form-data"
+      >
+        <input type="file" name="img" />
+        <input type="submit" className="btn btn-success" value="Upload Img" />
+      </form>
     </div>
   );
 };

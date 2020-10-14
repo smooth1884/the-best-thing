@@ -3,9 +3,14 @@ const express = require("express");
 const db = require("./db");
 const app = express();
 const cors = require("cors");
+const multer = require("multer");
+const bodyParser = require("body-parser");
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
+
+const upload = multer({ dest: "uploads/" });
 
 app.get("/", async (req, res) => {
   try {
@@ -27,7 +32,7 @@ app.get("/", async (req, res) => {
 app.get("/:id/img", async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT ENCODE(img,'base64') as img, img_id FROM imgs WHERE id = $1",
+      "SELECT img_url, img_id FROM imgs WHERE id = $1",
       [req.params.id]
     );
     res.json({
@@ -57,14 +62,17 @@ app.get("/:id", async (req, res) => {
   }
 });
 
-app.post("/:id/uploadimg", async (req, res) => {
-  console.log("SERVER" + req.body.img);
-  console.log("SERVER" + req.body.img.name);
-
+app.post("/:id/uploadimg", upload.single("img"), async (req, res) => {
+  console.log(req.file, req.body);
+  if (!file) {
+    const error = new Error("Please upload a file");
+    error.httpStatusCode = 400;
+    return next(error);
+  }
   try {
     const result = await db.query(
-      "INSERT INTO imgs (id, img_name, img) VALUES ($1, $2, pg_read_binary_file($3)) RETURNING *",
-      [req.params.id, req.body.name, req.body.path]
+      "INSERT INTO imgs (id, img_name, img_url) VALUES ($1, $2, $3)",
+      [req.params.id, req.file.originalname, req.file.path]
     );
     res.json({
       status: "success",

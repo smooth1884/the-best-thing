@@ -9,7 +9,7 @@ const ThingsDetailsImg = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await FetchThings.get(`/${id}/img`);
+      const response = await FetchThings.get(`/${id}/img_url`);
       const img = response.data.data;
       setImgs(img);
     };
@@ -22,7 +22,7 @@ const ThingsDetailsImg = () => {
           //   const img = imgs.img;
           return (
             <div key={img.img_id}>
-              <img src={`data:image/jpeg;base64,${img.img}`} alt="" />
+              <img src={img.img_url} alt="" />
             </div>
           );
         })}
