@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
+import ThingsDetailsImg from "./ThingsDetailsImg";
 
 export const ThingsDetails = (props) => {
   const { id } = useParams();
@@ -30,6 +31,17 @@ export const ThingsDetails = (props) => {
       </div>
       <h3></h3>
       <p>{description}</p>
+      <form
+        action={`http://localhost:3001/${id}/uploadImg`}
+        method="POST"
+        encType="multipart/form-data"
+      >
+        <input type="file" name="myFile" />
+        <button className="btn" type="Submit">
+          Submit
+        </button>
+      </form>
+      <ThingsDetailsImg />
     </div>
   );
 };

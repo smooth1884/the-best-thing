@@ -8,3 +8,12 @@ CREATE TABLE things
     score_plus INT,
     score_minus INT
 );
+
+CREATE TABLE imgs
+(
+    img_id SERIAL PRIMARY KEY,
+    id INT NOT NULL,
+    img_name TEXT NOT NULL,
+    img_url TEXT NOT NULL,
+    FOREIGN KEY (id) REFERENCES things(id)
+);
