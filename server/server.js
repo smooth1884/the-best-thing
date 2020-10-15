@@ -29,13 +29,14 @@ app.use(express.static("./"));
 //& IMGS
 //* POST IMG
 app.post("/:id/uploadImg", upload.single("myFile"), (req, res) => {
+  console.log(req.body);
   try {
     const result = db.query(
       "INSERT INTO imgs(id, img_name, img_url) VALUES ($1, $2, $3) RETURNING *",
       [req.params.id, req.file.originalname, req.file.path]
     );
     console.log(req.file);
-    res.json({ success: true });
+    res.redirect(`http://localhost:3002/${req.params.id}/details`);
   } catch (error) {
     console.error(error.message);
   }

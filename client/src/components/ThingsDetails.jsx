@@ -10,6 +10,7 @@ export const ThingsDetails = (props) => {
   const [description, setDescription] = useState("");
   const [scorePlus, setScorePlus] = useState();
   const [scoreMinus, setScoreMinus] = useState();
+  //const [imgData, setImgData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +23,26 @@ export const ThingsDetails = (props) => {
     };
     fetchData();
   }, []);
+
+  // const handleSumbit = async (e) => {
+  //   e.preventDefault();
+  // const config = {
+  //   headers: {
+  //     "content-type": "multipart/form-data",
+  //   },
+  // };
+  // const formData = new FormData();
+  // formData.append("myFile", imgData);
+  // console.log(formData);
+  // try {
+  //   const response = await FetchThings.post(`/${id}/uploadImg`, {
+  //     formData,
+  //   });
+  // } catch (error) {
+  //   console.error(error.message);
+  // }
+  //};
+
   return (
     <div className="text-center">
       <h1>{name}</h1>
@@ -33,10 +54,15 @@ export const ThingsDetails = (props) => {
       <p>{description}</p>
       <form
         action={`http://localhost:3001/${id}/uploadImg`}
-        method="POST"
         encType="multipart/form-data"
+        method="post"
+        //onSubmit={handleSumbit}
       >
-        <input type="file" name="myFile" />
+        <input
+          type="file"
+          name="myFile"
+          //onChange={(e) => setImgData(e.target.files[0])}
+        />
         <button className="btn" type="Submit">
           Submit
         </button>

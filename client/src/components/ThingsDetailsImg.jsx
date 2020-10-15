@@ -11,7 +11,6 @@ const ThingsDetailsImg = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await FetchThings.get(`/${id}/imgs`);
-      console.log(response);
       setImgs(response.data.imgs);
     };
     fetchData();
@@ -26,7 +25,7 @@ const ThingsDetailsImg = () => {
           return (
             <div key={id}>
               <img src={`http://localhost:3001/${imgURL}`} alt="" />
-              <button className="btn btn-danger">Remove Image</button>
+              {/* <button className="btn btn-danger">Remove Image</button> */}
             </div>
           );
         })}
