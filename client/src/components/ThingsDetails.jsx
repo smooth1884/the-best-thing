@@ -44,15 +44,6 @@ export const ThingsDetails = (props) => {
       <h3></h3>
       <p>{description}</p>
       <form
-<<<<<<< HEAD
-        action={`http://localhost:3001/${id}/uploadimg`}
-        method="post"
-        encType="multipart/form-data"
-      >
-        <input type="file" name="img" />
-        <input type="submit" className="btn btn-success" value="Upload Img" />
-      </form>
-=======
         action={`http://localhost:3001/${id}/uploadImg`}
         method="POST"
         encType="multipart/form-data"
@@ -63,7 +54,6 @@ export const ThingsDetails = (props) => {
         </button>
       </form>
       <ThingsDetailsImg />
->>>>>>> tmp
     </div>
   );
 };

@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
->>>>>>> tmp
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -62,13 +61,8 @@ app.get("/:id/imgs", async (req, res) => {
 //* DELETE IMG
 app.delete("/:id");
 
-<<<<<<< HEAD
-const upload = multer({ dest: "uploads/" });
-
-=======
 //& THINGS
 //* GET ALL THINGS
->>>>>>> tmp
 app.get("/", async (req, res) => {
   try {
     const result = await db.query(
@@ -84,58 +78,6 @@ app.get("/", async (req, res) => {
   } catch (error) {
     res.status(404).json(console.error(error.message));
   }
-<<<<<<< HEAD
-});
-
-app.get("/:id/img", async (req, res) => {
-  try {
-    const result = await db.query(
-      "SELECT img_url, img_id FROM imgs WHERE id = $1",
-      [req.params.id]
-    );
-    res.json({
-      status: "success",
-      results: result.rows.length,
-      data: result.rows,
-    });
-  } catch (error) {
-    res.status(404).json(console.error(error.message));
-  }
-});
-
-app.get("/:id", async (req, res) => {
-  try {
-    const result = await db.query("SELECT * FROM things WHERE id = $1", [
-      req.params.id,
-    ]);
-    res.json({
-      status: "success",
-      results: result.rows.length,
-      data: {
-        things: result.rows,
-      },
-    });
-  } catch (error) {
-    res.status(404).json(console.error(error.message));
-  }
-});
-
-app.post("/:id/uploadimg", upload.single("img"), async (req, res) => {
-  console.log(req.file, req.body);
-  if (!file) {
-    const error = new Error("Please upload a file");
-    error.httpStatusCode = 400;
-    return next(error);
-  }
-  try {
-    const result = await db.query(
-      "INSERT INTO imgs (id, img_name, img_url) VALUES ($1, $2, $3)",
-      [req.params.id, req.file.originalname, req.file.path]
-    );
-    res.json({
-      status: "success",
-      data: result.rows,
-=======
 });
 
 //* GET A THING
@@ -150,17 +92,13 @@ app.get("/:id", async (req, res) => {
       data: {
         things: result.rows,
       },
->>>>>>> tmp
     });
   } catch (error) {
     res.status(404).json(console.error(error.message));
   }
 });
 
-<<<<<<< HEAD
-=======
 //* POST THING
->>>>>>> tmp
 app.post("/", async (req, res) => {
   try {
     const result = await db.query(
@@ -181,10 +119,7 @@ app.post("/", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
 //* DELETE THING
->>>>>>> tmp
 app.delete("/:id", async (req, res) => {
   try {
     const result = await db.query("DELETE FROM things WHERE id = $1", [
@@ -202,10 +137,7 @@ app.delete("/:id", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
 //* LIKE
->>>>>>> tmp
 app.put("/:id/like", async (req, res) => {
   try {
     const result = await db.query(
@@ -222,10 +154,7 @@ app.put("/:id/like", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
 //*DISLIKE
->>>>>>> tmp
 app.put("/:id/dislike", async (req, res) => {
   try {
     const result = await db.query(
@@ -242,10 +171,7 @@ app.put("/:id/dislike", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
 //* UPDATE THING
->>>>>>> tmp
 app.put("/:id", async (req, res) => {
   try {
     const result = await db.query(
