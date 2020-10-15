@@ -22,7 +22,11 @@ const MainList = (props) => {
   }, []);
 
   const routeChange = (id) => {
+<<<<<<< HEAD
     history.push(`/${id}`);
+=======
+    history.push(`/${id}/details`);
+>>>>>>> tmp
   };
 
   const scorePlus = async (id) => {
@@ -30,7 +34,11 @@ const MainList = (props) => {
       const response = await FetchThings.put(`/${id}/like`);
       updateThing(response.data.data);
     } catch (error) {
+<<<<<<< HEAD
       console.error(error.message);
+=======
+      console.log(error.message);
+>>>>>>> tmp
     }
   };
   const scoreMinus = async (id) => {
@@ -38,7 +46,11 @@ const MainList = (props) => {
       const response = await FetchThings.put(`/${id}/dislike`);
       updateThing(response.data.data);
     } catch (error) {
+<<<<<<< HEAD
       console.error(error.message);
+=======
+      console.log(error.message);
+>>>>>>> tmp
     }
   };
 

@@ -13,7 +13,12 @@ CREATE TABLE imgs
 (
     img_id SERIAL PRIMARY KEY,
     id INT NOT NULL,
+<<<<<<< HEAD
     img_name text NOT NULL,
     img_url text NOT NULL,
+=======
+    img_name TEXT NOT NULL,
+    img_url TEXT NOT NULL,
+>>>>>>> tmp
     FOREIGN KEY (id) REFERENCES things(id)
 );
