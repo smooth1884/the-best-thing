@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
 import { ThingsContext } from "../context/ThingsContext";
 import AddThing from "./AddThing";
@@ -43,6 +43,17 @@ const MainList = ({ isAuthenticated }) => {
     }
   };
 
+  function AddingAllowed() {
+    if (!isAuthenticated) {
+      return (
+        <Link type="button" className="btn btn-primary" to="/login">
+          Add
+        </Link>
+      );
+    }
+    return <AddThing />;
+  }
+
   return (
     <div className="container-sm">
       <table className="table table-hover table-dark table table-bordered">
@@ -53,7 +64,7 @@ const MainList = ({ isAuthenticated }) => {
             <th></th>
             <th scope="col">Score</th>
             <th>
-              <AddThing isAuthenticated={isAuthenticated} />
+              <AddingAllowed />
             </th>
           </tr>
         </thead>

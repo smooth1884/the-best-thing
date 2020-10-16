@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
 import { ThingsContext } from "../context/ThingsContext";
 
-const AddThing = ({ isAuthenticated }) => {
+const AddThing = () => {
   const { addThings } = useContext(ThingsContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [scorePlus, setScorePlus] = useState(0);
-  const [scoreMinus, setScoreMinus] = useState(0);
 
   const handleSumbit = async (e) => {
     e.preventDefault();
@@ -17,8 +14,8 @@ const AddThing = ({ isAuthenticated }) => {
       const response = await FetchThings.post("/", {
         name,
         description,
-        score_plus: scorePlus,
-        score_minus: scoreMinus,
+        score_plus: 0,
+        score_minus: 0,
       });
       addThings(response.data.data.things[0]);
     } catch (error) {
@@ -26,15 +23,8 @@ const AddThing = ({ isAuthenticated }) => {
     }
   };
 
-  function Add() {
-    if (!isAuthenticated) {
-      return (
-        <Link type="button" className="btn btn-primary" to="/login">
-          Add
-        </Link>
-      );
-    }
-    return (
+  return (
+    <div>
       <div>
         <button
           type="button"
@@ -55,7 +45,11 @@ const AddThing = ({ isAuthenticated }) => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">
+                <h5
+                  style={{ color: "black" }}
+                  className="modal-title"
+                  id="exampleModalLabel"
+                >
                   Add a Thing
                 </h5>
                 <button
@@ -108,11 +102,6 @@ const AddThing = ({ isAuthenticated }) => {
           </div>
         </div>
       </div>
-    );
-  }
-  return (
-    <div>
-      <Add />
     </div>
   );
 };
