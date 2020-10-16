@@ -3,19 +3,23 @@ CREATE DATABASE thebestthing;
 CREATE TABLE things
 (
     id SERIAL PRIMARY KEY,
+    user_id UUID,
     name VARCHAR(50),
     description VARCHAR(255),
     score_plus INT,
-    score_minus INT
+    score_minus INT,
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE imgs
 (
     img_id SERIAL PRIMARY KEY,
+    user_id UUID,
     id INT NOT NULL,
     img_name TEXT NOT NULL,
     img_url TEXT NOT NULL,
-    FOREIGN KEY (id) REFERENCES things(id)
+    FOREIGN KEY (id) REFERENCES things(id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 
