@@ -6,9 +6,10 @@ import FetchThings from "../apis/FetchThings";
 import { ThingsContext } from "../context/ThingsContext";
 import AddThing from "./AddThing";
 
-const MainList = (props) => {
+const MainList = ({ isAuthenticated }) => {
   const { things, setThings, updateThing } = useContext(ThingsContext);
   let history = useHistory();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,7 +53,7 @@ const MainList = (props) => {
             <th></th>
             <th scope="col">Score</th>
             <th>
-              <AddThing />
+              <AddThing isAuthenticated={isAuthenticated} />
             </th>
           </tr>
         </thead>

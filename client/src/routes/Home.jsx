@@ -3,15 +3,15 @@ import Header from "../components/Header";
 import MainList from "../components/MainList";
 import { ThingsContextProvider } from "../context/ThingsContext";
 
-const Home = () => {
+function Home({ isAuthenticated }) {
   return (
     <ThingsContextProvider>
       <div>
         <Header />
-        <MainList />
+        <MainList isAuthenticated={isAuthenticated} />
       </div>
     </ThingsContextProvider>
   );
-};
+}
 
 export default Home;

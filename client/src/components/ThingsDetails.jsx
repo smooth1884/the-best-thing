@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
 import ThingsDetailsImg from "./ThingsDetailsImg";
 
-export const ThingsDetails = (props) => {
+export const ThingsDetails = ({ isAuthenticated }) => {
   const { id } = useParams();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [scorePlus, setScorePlus] = useState();
   const [scoreMinus, setScoreMinus] = useState();
-  //const [imgData, setImgData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,24 +23,27 @@ export const ThingsDetails = (props) => {
     fetchData();
   }, []);
 
-  // const handleSumbit = async (e) => {
-  //   e.preventDefault();
-  // const config = {
-  //   headers: {
-  //     "content-type": "multipart/form-data",
-  //   },
-  // };
-  // const formData = new FormData();
-  // formData.append("myFile", imgData);
-  // console.log(formData);
-  // try {
-  //   const response = await FetchThings.post(`/${id}/uploadImg`, {
-  //     formData,
-  //   });
-  // } catch (error) {
-  //   console.error(error.message);
-  // }
-  //};
+  function AddPicture() {
+    if (!isAuthenticated) {
+      return (
+        <p>
+          Please <Link to="/login">Login</Link> to add a Picutre!
+        </p>
+      );
+    }
+    return (
+      <form
+        action={`http://localhost:3001/${id}/uploadImg`}
+        encType="multipart/form-data"
+        method="post"
+      >
+        <input type="file" name="myFile" />
+        <button className="btn btn-success" type="Submit">
+          Upload
+        </button>
+      </form>
+    );
+  }
 
   return (
     <div className="text-center">
@@ -52,21 +54,7 @@ export const ThingsDetails = (props) => {
       </div>
       <h3></h3>
       <p>{description}</p>
-      <form
-        action={`http://localhost:3001/${id}/uploadImg`}
-        encType="multipart/form-data"
-        method="post"
-        //onSubmit={handleSumbit}
-      >
-        <input
-          type="file"
-          name="myFile"
-          //onChange={(e) => setImgData(e.target.files[0])}
-        />
-        <button className="btn" type="Submit">
-          Submit
-        </button>
-      </form>
+      <AddPicture />
       <ThingsDetailsImg />
     </div>
   );

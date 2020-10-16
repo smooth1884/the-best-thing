@@ -26,10 +26,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("./"));
 
+//& LOGIN AND REGISTER
+
+//* register and login routes
+app.use("/auth", require("./routes/jwtAuth"));
+
+//dashboard route
+// app.use('/dashboard', require('./routes/dashboard'));
+
 //& IMGS
 //* POST IMG
 app.post("/:id/uploadImg", upload.single("myFile"), (req, res) => {
-  console.log(req.body);
   try {
     const result = db.query(
       "INSERT INTO imgs(id, img_name, img_url) VALUES ($1, $2, $3) RETURNING *",
