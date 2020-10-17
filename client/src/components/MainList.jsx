@@ -54,6 +54,10 @@ const MainList = ({ isAuthenticated }) => {
     return <AddThing />;
   }
 
+
+
+
+
   return (
     <div className="container-sm">
       <table className="table table-hover table-dark table table-bordered">
@@ -114,6 +118,7 @@ const MainList = ({ isAuthenticated }) => {
                       </svg>
                     </h6>
                   </td>
+                  {/* <AdminRemove /> */}
                 </tr>
               );
             })}

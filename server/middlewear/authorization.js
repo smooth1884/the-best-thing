@@ -4,9 +4,8 @@ require("dotenv").config();
 
 module.exports = async (req, res, next) => {
   const jwtToken = req.header("token");
-
   if (!jwtToken) {
-    return req.status(403).json("Not Authorized"); // Checks if User even has a token
+    return res.status(403).json("Not Authorized"); // Checks if User even has a token
   }
   try {
     //verify is a jwt function which checks if the given token is a valid token

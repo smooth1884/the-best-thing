@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
 import ThingsDetailsImg from "./ThingsDetailsImg";
+import CommentBox from "./CommentBox";
 
 export const ThingsDetails = ({ isAuthenticated }) => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ export const ThingsDetails = ({ isAuthenticated }) => {
   const [description, setDescription] = useState("");
   const [scorePlus, setScorePlus] = useState();
   const [scoreMinus, setScoreMinus] = useState();
+  // const [img, setImg] = useState()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +25,7 @@ export const ThingsDetails = ({ isAuthenticated }) => {
     fetchData();
   }, []);
 
+
   function AddPicture() {
     if (!isAuthenticated) {
       return (
@@ -31,14 +34,43 @@ export const ThingsDetails = ({ isAuthenticated }) => {
         </p>
       );
     }
+
+  //   const handleFileSelection = (e) => {
+  //     const { files } = e.target;
+  //     if (!files.length) return;
+  //     setImg(files[0]);
+  // };
+
+  //   const handleSubmit = async(e) => {
+  //     e.preventDefault();
+
+  //     const data = new FormData()
+  //     data.append('img', img)
+  //     console.log(img)
+
+  //     try {
+  //       const response = await fetch(`http://localhost:3001/${id}/uploadImg`,{
+  //         method: 'POST',
+  //         body: data, 
+  //         headers: {token: localStorage.token}
+  //       })
+  //       console.log(response)
+  //     } catch (error) {
+  //       console.error(error.message)
+  //     }
+  //   }
     return (
       <form
         action={`http://localhost:3001/${id}/uploadImg`}
         encType="multipart/form-data"
         method="post"
+        // onSubmit={handleSubmit} 
       >
-        <input type="file" name="myFile" />
-        <button className="btn btn-success" type="Submit">
+        <input type="file" name="myFile"
+        // onChange={handleFileSelection}
+        />
+        <button className="btn btn-success" 
+        type="submit">
           Upload
         </button>
       </form>
@@ -55,6 +87,7 @@ export const ThingsDetails = ({ isAuthenticated }) => {
       <h3></h3>
       <p>{description}</p>
       <AddPicture />
+      <CommentBox />
       <ThingsDetailsImg />
     </div>
   );

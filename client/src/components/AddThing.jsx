@@ -11,11 +11,13 @@ const AddThing = () => {
   const handleSumbit = async (e) => {
     e.preventDefault();
     try {
+    
       const response = await FetchThings.post("/", {
         name,
         description,
         score_plus: 0,
         score_minus: 0,
+        headers: {token: localStorage.token}
       });
       addThings(response.data.data.things[0]);
     } catch (error) {

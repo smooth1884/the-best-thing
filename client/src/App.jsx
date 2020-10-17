@@ -20,10 +20,29 @@ import Login from "./components/JWT Components/Login";
 import Register from "./components/JWT Components/Register";
 import LogInOut from "./components/LogInOut";
 import { useContext } from "react";
+import FetchThings from "./apis/FetchThings";
 
 toast.configure();
 
 const App = () => {
+
+  // const [admin, setAdmin] = useState(false)
+
+
+  // async function isAdmin(e) {
+  //   e.preventDefault()
+  //   try {
+  //     const response = await FetchThings.get('/admin', {
+  //       headers: {token: localStorage.token }
+  //     })
+  //     console.log(response)
+
+      
+  //   } catch (error) {
+  //     console.error(error.message)
+  //   }
+  // }
+
   const [
     isAuthenticated,
     setIsAuthenticated, //1. destructure the req.body(name, email, password)
@@ -53,6 +72,7 @@ const App = () => {
 
   return (
     <div>
+      
       <Router>
         <LogInOut isAuthenticated={isAuthenticated} setAuth={setAuth} />
         <Route

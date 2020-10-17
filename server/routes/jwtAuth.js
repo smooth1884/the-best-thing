@@ -38,10 +38,11 @@ router.post('/register', validInfo, async (req, res) => {
         //4. Enter user inside database
 
         let newUser = await pool.query
-            ("INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *", [
+            ("INSERT INTO users (user_name, user_email, user_password, admin) VALUES ($1, $2, $3, $4) RETURNING *", [
                 name,
                 email,
-                bcryptPassword
+                bcryptPassword,
+                false
             ]);
 
            

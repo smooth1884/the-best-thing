@@ -5,7 +5,7 @@ const app = express();
 const cors = require("cors");
 const path = require("path");
 const multer = require("multer");
-//const upload = multer({ dest: "./public/uploads" });
+const auth = require('./middlewear/authorization')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -26,6 +26,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("./"));
 
+//& CHECK IF ADMIN
+
+// app.get('/admin', auth, (req, res) => {
+//   try {
+//     const result = db.query('SELECT admin FROM users WHERE user_id = $1', [req.body])
+//     res.json(result)
+//   } catch (error) {
+//     console.error(error.message)
+//   }
+// })
+
 //& LOGIN AND REGISTER
 
 //* register and login routes
@@ -42,8 +53,8 @@ app.post("/:id/uploadImg", upload.single("myFile"), (req, res) => {
       "INSERT INTO imgs(id, img_name, img_url) VALUES ($1, $2, $3) RETURNING *",
       [req.params.id, req.file.originalname, req.file.path]
     );
-    console.log(req.file);
-    res.redirect(`http://localhost:3002/${req.params.id}/details`);
+   
+    res.redirect(`http://localhost:3000/${req.params.id}/details`);
   } catch (error) {
     console.error(error.message);
   }
@@ -55,7 +66,7 @@ app.get("/:id/imgs", async (req, res) => {
     const result = await db.query(
       "SELECT img_url, img_id FROM imgs WHERE id = $1",
       [req.params.id]
-    );
+    )
     res.json({
       status: "success",
       imgs: result.rows,
@@ -106,15 +117,16 @@ app.get("/:id", async (req, res) => {
 });
 
 //* POST THING
-app.post("/", async (req, res) => {
+app.post("/", auth, async (req, res) => {
   try {
     const result = await db.query(
-      "INSERT INTO things(name, description, score_plus, score_minus) VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO things(name, description, score_plus, score_minus, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [
         req.body.name,
         req.body.description,
         req.body.score_plus,
         req.body.score_minus,
+        req.user,
       ]
     );
     res.json({
