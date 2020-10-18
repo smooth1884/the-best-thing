@@ -4,7 +4,7 @@ import FetchThings from "../apis/FetchThings";
 import { ThingsContext } from "../context/ThingsContext";
 
 const AddThing = () => {
-  const { addThings } = useContext(ThingsContext);
+  const { addThings, setReloadThings, reloadTings } = useContext(ThingsContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
@@ -15,11 +15,9 @@ const AddThing = () => {
       const response = await FetchThings.post("/", {
         name,
         description,
-        score_plus: 0,
-        score_minus: 0,
-        headers: {token: localStorage.token}
-      });
-      addThings(response.data.data.things[0]);
+      },{headers: {token: localStorage.token}});
+      setReloadThings(!reloadTings)
+      //addThings(response.data.data.things[0]);
     } catch (error) {
       console.error(error.message);
     }

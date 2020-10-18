@@ -5,7 +5,7 @@ const app = express();
 const cors = require("cors");
 const path = require("path");
 const multer = require("multer");
-const auth = require('./middlewear/authorization')
+const autorization = require('./middlewear/authorization')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -28,7 +28,7 @@ app.use(express.static("./"));
 
 //& CHECK IF ADMIN
 
-// app.get('/admin', auth, (req, res) => {
+// app.get('/admin', autorization, (req, res) => {
 //   try {
 //     const result = db.query('SELECT admin FROM users WHERE user_id = $1', [req.body])
 //     res.json(result)
@@ -47,15 +47,17 @@ app.use("/auth", require("./routes/jwtAuth"));
 
 //& IMGS
 //* POST IMG
-app.post("/:id/uploadImg", upload.single("myFile"), (req, res) => {
+app.post("/:id/uploadImg", upload.single("img"), autorization, async (req, res) => {
   try {
-    const result = db.query(
-      "INSERT INTO imgs(id, img_name, img_url) VALUES ($1, $2, $3) RETURNING *",
-      [req.params.id, req.file.originalname, req.file.path]
+    const result = await db.query(
+      "INSERT INTO imgs(id, img_name, img_url, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [req.params.id, req.file.originalname, req.file.path, req.user]
     );
-   
-    res.redirect(`http://localhost:3000/${req.params.id}/details`);
-  } catch (error) {
+    res.json({
+      status: 'success',
+      imgUrl: result.rows[0].img_url
+  })
+     } catch (error) {
     console.error(error.message);
   }
 });
@@ -102,7 +104,7 @@ app.get("/", async (req, res) => {
 app.get('/page/:pid', async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT *, COUNT(*) OVER() AS full_count FROM things ORDER BY score_plus - score_minus DESC LIMIT $1 OFFSET $2', [2, (2 *(req.params.pid -1)) ]
+      'SELECT *, COUNT(*) OVER() AS full_count, ROW_NUMBER () OVER ( ORDER BY score_plus - score_minus DESC) FROM things LIMIT $1 OFFSET $2', [2, (2 *(req.params.pid -1)) ]
     )
     res.json({
       status: "success",
@@ -134,15 +136,15 @@ app.get("/:id", async (req, res) => {
 });
 
 //* POST THING
-app.post("/", auth, async (req, res) => {
+app.post("/", autorization, async (req, res) => {
   try {
     const result = await db.query(
       "INSERT INTO things(name, description, score_plus, score_minus, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [
         req.body.name,
         req.body.description,
-        req.body.score_plus,
-        req.body.score_minus,
+        0,
+        0,
         req.user,
       ]
     );

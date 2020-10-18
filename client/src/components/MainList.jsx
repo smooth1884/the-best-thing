@@ -4,10 +4,11 @@ import FetchThings from "../apis/FetchThings";
 import { ThingsContext } from "../context/ThingsContext";
 import Pagination from 'react-bootstrap/Pagination'
 import AddThing from "./AddThing";
+import { toast } from "react-toastify";
 
 
 const MainList = ({ isAuthenticated }) => {
-  const { things, setThings, updateThing } = useContext(ThingsContext);
+  const { things, setThings, updateThing, setReloadThings, reloadThings } = useContext(ThingsContext);
   const [active, setActive] = useState(1)
   const [pages, setPages] = useState('')
   let history = useHistory();
@@ -18,31 +19,42 @@ const MainList = ({ isAuthenticated }) => {
         const response = await FetchThings.get(`/page/${pid}`)
         setThings(response.data.data.things);
         setPages(response.data.data.things[0].full_count)
+        
       } catch (error) {
         console.error(error.message);
       }
     };
     fetchData(active);
-  }, [active]);
+  }, [active, reloadThings]);
 
   const routeChange = (id) => {
     history.push(`/${id}/details`);
   };
 
   const scorePlus = async (id) => {
-    try {
-      const response = await FetchThings.put(`/${id}/like`);
-      updateThing(response.data.data);
-    } catch (error) {
-      console.log(error.message);
+    if (isAuthenticated){
+      try {
+        const response = await FetchThings.put(`/${id}/like`);
+        // updateThing(response.data.data);
+        setReloadThings(!reloadThings)
+      } catch (error) {
+        console.error(error.message);
+      }
+    }else{
+      toast.error("You need to be logged in to vote!")
     }
   };
   const scoreMinus = async (id) => {
-    try {
-      const response = await FetchThings.put(`/${id}/dislike`);
-      updateThing(response.data.data);
-    } catch (error) {
-      console.log(error.message);
+    if(isAuthenticated){
+      try {
+        const response = await FetchThings.put(`/${id}/dislike`);
+        // updateThing(response.data.data);
+        setReloadThings(!reloadThings)
+      } catch (error) {
+        console.error(error.message);
+      }
+    }else{
+      toast.error('You need to be logged in to vote!')
     }
   };
 
@@ -59,6 +71,7 @@ const MainList = ({ isAuthenticated }) => {
 
   const PaginationBasic = () => {
     let items = [];
+    
     for (let number = 1; number <= Math.round(pages / 2); number++) {
       items.push(
         <Pagination.Item onClick={() => setActive(number)} key={number} active={number === active}>
@@ -97,10 +110,11 @@ const MainList = ({ isAuthenticated }) => {
               const plus = thing.score_plus;
               const minus = thing.score_minus;
               const score = plus - minus;
-              const index = offset + 1;
+              //const index = offset + 1;
+              const newIndex = thing.row_number
               return (
-                <tr key={index}>
-                  <th scope="row">{index}</th>
+                <tr key={thing.id}>
+                  <th scope="row">{newIndex}</th>
                   <td onClick={() => routeChange(thing.id)}>{thing.name}</td>
                   <td>
                     <h6 onClick={() => scorePlus(thing.id)}>

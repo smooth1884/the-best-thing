@@ -4,6 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
 import ThingsDetailsImg from "./ThingsDetailsImg";
 import CommentBox from "./CommentBox";
+import { useContext } from "react";
+import { ThingsContext } from "../context/ThingsContext";
 
 export const ThingsDetails = ({ isAuthenticated }) => {
   const { id } = useParams();
@@ -11,7 +13,10 @@ export const ThingsDetails = ({ isAuthenticated }) => {
   const [description, setDescription] = useState("");
   const [scorePlus, setScorePlus] = useState();
   const [scoreMinus, setScoreMinus] = useState();
-  // const [img, setImg] = useState()
+  const [img, setImg] = useState()
+  // const {addImg, newImg, setNewImg} = useContext(ThingsContext)
+  const [newImg, setNewImg] = useState('')
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,39 +40,36 @@ export const ThingsDetails = ({ isAuthenticated }) => {
       );
     }
 
-  //   const handleFileSelection = (e) => {
-  //     const { files } = e.target;
-  //     if (!files.length) return;
-  //     setImg(files[0]);
-  // };
+    const handleFileSelection = (e) => {
+      const { files } = e.target;
+      if (!files.length) return;
+      setImg(files[0]);
+  };
 
-  //   const handleSubmit = async(e) => {
-  //     e.preventDefault();
+    const handleSubmit = async(e) => {
+      e.preventDefault();
 
-  //     const data = new FormData()
-  //     data.append('img', img)
-  //     console.log(img)
+      const data = new FormData()
+      data.append('img', img)
 
-  //     try {
-  //       const response = await fetch(`http://localhost:3001/${id}/uploadImg`,{
-  //         method: 'POST',
-  //         body: data, 
-  //         headers: {token: localStorage.token}
-  //       })
-  //       console.log(response)
-  //     } catch (error) {
-  //       console.error(error.message)
-  //     }
-  //   }
+      try {
+        const response = await FetchThings.post(`${id}/uploadImg`, data,
+        {headers: {token: localStorage.token}})
+        setNewImg(response.data.imgUrl);
+        //addImg();
+      } catch (error) {
+        console.error(error.message)
+      }
+    }
     return (
       <form
-        action={`http://localhost:3001/${id}/uploadImg`}
-        encType="multipart/form-data"
-        method="post"
-        // onSubmit={handleSubmit} 
+        // action={`http://localhost:3001/${id}/uploadImg`}
+        // encType="multipart/form-data"
+        // method="post"
+        onSubmit={handleSubmit} 
       >
         <input type="file" name="myFile"
-        // onChange={handleFileSelection}
+        onChange={handleFileSelection}
         />
         <button className="btn btn-success" 
         type="submit">
@@ -86,7 +88,7 @@ export const ThingsDetails = ({ isAuthenticated }) => {
       </div>
       <h3></h3>
       <p>{description}</p>
-      <AddPicture />
+      <AddPicture newImg={newImg}/>
       <CommentBox />
       <ThingsDetailsImg />
     </div>

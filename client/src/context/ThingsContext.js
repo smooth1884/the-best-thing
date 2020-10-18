@@ -13,6 +13,9 @@ const sortThings = (things) => {
 
 export const ThingsContextProvider = (props) => {
   const [things, setThings] = useState([]);
+  const [reloadThings, setReloadThings] = useState(false);
+  const [Imgs, setImgs] = useState([]);
+  const [newImg, setNewImg] = useState('')
   const addThings = (thing) => {
     setThings([...things, thing]);
   };
@@ -26,6 +29,10 @@ export const ThingsContextProvider = (props) => {
     setThings(sortedThings);
   };
 
+  const addImg = (newImg) => {
+    setImgs([...Imgs, newImg])
+  }
+
   return (
     <ThingsContext.Provider
       value={{
@@ -33,6 +40,13 @@ export const ThingsContextProvider = (props) => {
         setThings,
         addThings,
         updateThing,
+        setReloadThings,
+        reloadThings,
+        setNewImg, 
+        setImgs, 
+        newImg,
+        Imgs,
+        addImg
       }}
     >
       {props.children}

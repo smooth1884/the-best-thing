@@ -2,11 +2,15 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { ThingsContext } from "../context/ThingsContext";
+
 import FetchThings from "../apis/FetchThings";
+import { useContext } from "react";
 
 const ThingsDetailsImg = () => {
   const { id } = useParams();
-  const [imgs, setImgs] = useState([]);
+  const [Imgs, setImgs] = useState([]);
+  // const {Imgs, setImgs} = useContext(ThingsContext)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,11 +19,12 @@ const ThingsDetailsImg = () => {
     };
     fetchData();
   }, []);
+
   return (
     <div>
       <h3>Images</h3>
-      {imgs &&
-        imgs.map((img) => {
+      {Imgs &&
+        Imgs.map((img) => {
           const id = img.img_id;
           const imgURL = img.img_url;
           return (
