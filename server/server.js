@@ -98,6 +98,23 @@ app.get("/", async (req, res) => {
   }
 });
 
+//* GET ALL THINGS PAGINATION
+app.get('/page/:pid', async (req, res) => {
+  try {
+    const result = await db.query(
+      'SELECT *, COUNT(*) OVER() AS full_count FROM things ORDER BY score_plus - score_minus DESC LIMIT $1 OFFSET $2', [2, (2 *(req.params.pid -1)) ]
+    )
+    res.json({
+      status: "success",
+      results: result.rows.length,
+      data: {
+        things: result.rows,
+      }})
+  } catch (error) {
+    res.status(404).json(console.error(error.message));
+  }
+})
+
 //* GET A THING
 app.get("/:id", async (req, res) => {
   try {

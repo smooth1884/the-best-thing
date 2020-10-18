@@ -1,26 +1,29 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import FetchThings from "../apis/FetchThings";
 import { ThingsContext } from "../context/ThingsContext";
+import Pagination from 'react-bootstrap/Pagination'
 import AddThing from "./AddThing";
+
 
 const MainList = ({ isAuthenticated }) => {
   const { things, setThings, updateThing } = useContext(ThingsContext);
+  const [active, setActive] = useState(1)
+  const [pages, setPages] = useState('')
   let history = useHistory();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (pid) => {
       try {
-        const response = await FetchThings.get("/");
+        const response = await FetchThings.get(`/page/${pid}`)
         setThings(response.data.data.things);
+        setPages(response.data.data.things[0].full_count)
       } catch (error) {
         console.error(error.message);
       }
     };
-    fetchData();
-  }, []);
+    fetchData(active);
+  }, [active]);
 
   const routeChange = (id) => {
     history.push(`/${id}/details`);
@@ -53,6 +56,22 @@ const MainList = ({ isAuthenticated }) => {
     }
     return <AddThing />;
   }
+
+  const PaginationBasic = () => {
+    let items = [];
+    for (let number = 1; number <= Math.round(pages / 2); number++) {
+      items.push(
+        <Pagination.Item onClick={() => setActive(number)} key={number} active={number === active}>
+          {number}
+        </Pagination.Item>,
+      );
+    }
+        return(
+            <div>
+        <Pagination >{items}</Pagination>
+        </div>
+        )
+    }
 
 
 
@@ -124,6 +143,7 @@ const MainList = ({ isAuthenticated }) => {
             })}
         </tbody>
       </table>
+      <PaginationBasic />
     </div>
   );
 };

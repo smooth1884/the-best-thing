@@ -38,3 +38,17 @@ CREATE TABLE users
     PRIMARY KEY (user_id)
 );
 
+CREATE TABLE comments
+(
+    comment_id SERIAL PRIMARY KEY,
+    comment VARCHAR(255),
+    user_name VARCHAR(255),
+    user_id UUID,
+    id INT,
+    date_created TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (user_name) REFERENCES users(user_name),
+    FOREIGN KEY (id) REFERENCES things(id)
+);
+
+
