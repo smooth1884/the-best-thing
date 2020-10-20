@@ -48,12 +48,18 @@ app.get('/:id', async (req, res) => {
                 [things[i].id]
             )
             const commentsResult = await db.query(
-                `SELECT comment, user_name, date_created, comment_id FROM comments WHERE id = $1 ORDER BY date_created DESC`,
+                `SELECT comment, user_name, date_created, comment_id FROM comments WHERE id = $1 AND parent_id IS NULL ORDER BY date_created DESC`,
                 [things[i].id]
             )
+            const commentsWithParentsResult = await db.query(
+                `SELECT comment, user_name, date_created, comment_id, parent_id FROM comments WHERE id =$1 AND parent_id IS NOT NULL ORDER BY date_created DESC`,
+                [things[i].id]
+            )
+            const commentsWithParents = commentsWithParentsResult.rows
             const comments = commentsResult.rows
             const imgs = imgsResult.rows
 
+            things[i].commentsWithParents = commentsWithParents
             things[i].imgs = imgs
             things[i].comments = comments
         }

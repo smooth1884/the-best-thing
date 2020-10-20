@@ -11,6 +11,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
     const [newImg, setNewImg] = useState('')
     const [Imgs, setImgs] = useState([])
     const [comments, setComments] = useState([])
+    const [commentsWithParents, setCommentsWithParents] = useState([])
     const fileInput = useRef(null)
 
     useEffect(() => {
@@ -20,6 +21,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
             setName(thing.name)
             setImgs(thing.imgs)
             setComments(thing.comments)
+            setCommentsWithParents(thing.commentsWithParents)
             setDescription(thing.description)
             setScorePlus(thing.score_plus)
             setScoreMinus(thing.score_minus)
@@ -87,7 +89,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
         )
     }
 
-    const AddComment = () => {
+    const AddComment = (parent_id) => {
         const [comment, setComment] = useState('')
         const [parentId, setParentId] = useState(null)
         const timestamp = new Date()
@@ -103,6 +105,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
         const handleSubmit = async (e) => {
             e.preventDefault()
+            console.log(parentId)
             try {
                 const response = await FetchThings.post(
                     `${id}/post-comment`,
@@ -128,6 +131,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         value={comment}
                     />
                     <button
+                        onClick={() => setParentId(parent_id.parent_id)}
                         style={{ margin: '10px' }}
                         className="btn btn-success"
                         type="submit"
@@ -164,6 +168,41 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
         return null
     }
 
+    const MapCommentsWithParents = (parent_id) => {
+        return (
+            <div>
+                {commentsWithParents &&
+                    commentsWithParents.map((com) => {
+                        const id = com.comment_id
+                        const comment = com.comment
+                        const date = com.date_created
+                        const name = com.user_name
+                        const parent = com.parent_id
+                        if (parent_id.parent_id === parent) {
+                            return (
+                                <div key={id}>
+                                    <p>{name}</p>
+                                    <p>{comment}</p>
+                                    <p
+                                        style={{
+                                            color: 'gray',
+                                            fontSize: '10px',
+                                        }}
+                                    >
+                                        {date}
+                                    </p>
+
+                                    <DeleteComment id={id} />
+                                </div>
+                            )
+                        } else {
+                            return null
+                        }
+                    })}
+            </div>
+        )
+    }
+
     const MapComments = () => {
         return (
             <div>
@@ -173,7 +212,6 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         const comment = com.comment
                         const date = com.date_created
                         const name = com.user_name
-                        const parent = com.parent_id
                         return (
                             <div key={id} style={{ border: '1px solid black' }}>
                                 <p>{name}</p>
@@ -186,16 +224,17 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                                 >
                                     {date}
                                 </p>
-                                <button className="btn btn-success">
-                                    Reply
-                                </button>
+                                <AddComment parent_id={id} />
+
                                 <DeleteComment id={id} />
+                                <MapCommentsWithParents parent_id={id} />
                             </div>
                         )
                     })}
             </div>
         )
     }
+
     return (
         <div className="text-center">
             <h1>{name}</h1>
