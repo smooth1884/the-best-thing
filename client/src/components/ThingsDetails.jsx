@@ -68,27 +68,6 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
         )
     }
 
-    const MapImgs = () => {
-        return (
-            <div>
-                {Imgs &&
-                    Imgs.map((img) => {
-                        const id = img.img_id
-                        const imgURL = img.img_url
-                        return (
-                            <div key={id}>
-                                <img
-                                    src={`http://localhost:3001/${imgURL}`}
-                                    alt=""
-                                />
-                                {/* <button className="btn btn-danger">Remove Image</button> */}
-                            </div>
-                        )
-                    })}
-            </div>
-        )
-    }
-
     const AddComment = (parent_id) => {
         const [comment, setComment] = useState('')
         const [parentId, setParentId] = useState(null)
@@ -105,7 +84,6 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
         const handleSubmit = async (e) => {
             e.preventDefault()
-            console.log(parentId)
             try {
                 const response = await FetchThings.post(
                     `${id}/post-comment`,
@@ -117,7 +95,6 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                     },
                     { headers: { token: localStorage.token } }
                 )
-                console.log(response)
             } catch (error) {
                 console.error(error.message)
             }
@@ -144,24 +121,44 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
         )
     }
 
-    const handleCommentDelete = async (id) => {
-        console.log(id)
+    const handleDeleteComment = async (id) => {
         try {
             const response = await FetchThings.delete(`/${id}/delete-comment`)
-            console.log(response)
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
     const DeleteComment = (id) => {
-        if (isAuthenticated) {
+        if (isAdmin) {
             return (
                 <button
-                    onClick={() => handleCommentDelete(id.id)}
+                    onClick={() => handleDeleteComment(id.id)}
                     className="btn btn-danger"
                 >
-                    Delete
+                    Delete Comment
+                </button>
+            )
+        }
+        return null
+    }
+
+    const handleDeleteImg = async (id) => {
+        try {
+            const response = await FetchThings.delete(`/${id}/delete-img`)
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
+    const DeleteImg = (img_id) => {
+        if (isAdmin) {
+            return (
+                <button
+                    onClick={() => handleDeleteImg(img_id.img_id)}
+                    className="btn btn-danger"
+                >
+                    Delete Img
                 </button>
             )
         }
@@ -228,6 +225,27 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
                                 <DeleteComment id={id} />
                                 <MapCommentsWithParents parent_id={id} />
+                            </div>
+                        )
+                    })}
+            </div>
+        )
+    }
+
+    const MapImgs = () => {
+        return (
+            <div>
+                {Imgs &&
+                    Imgs.map((img) => {
+                        const id = img.img_id
+                        const imgURL = img.img_url
+                        return (
+                            <div key={id}>
+                                <img
+                                    src={`http://localhost:3001/${imgURL}`}
+                                    alt=""
+                                />
+                                <DeleteImg img_id={id} />
                             </div>
                         )
                     })}

@@ -143,7 +143,16 @@ app.delete('/:id/delete-comment', async (req, res) => {
 })
 
 //* DELETE IMG
-app.delete('/:id')
+app.delete('/:id/delete-img', async (req, res) => {
+    try {
+        const result = await db.query(
+            `DELETE FROM imgs WHERE img_id = $1 RETURNING *`,
+            [req.params.id]
+        )
+    } catch (error) {
+        res.status(404).json(console.error(error.message))
+    }
+})
 
 //& THINGS
 //* GET ALL THINGS
