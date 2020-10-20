@@ -41,14 +41,14 @@ CREATE TABLE users
 CREATE TABLE comments
 (
     comment_id SERIAL PRIMARY KEY,
-    comment VARCHAR(255),
+    parent_id INT,
+    comment VARCHAR(255) NOT NULL,
     user_name VARCHAR(255),
     user_id UUID,
     id INT,
     date_created TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (user_name) REFERENCES users(user_name),
-    FOREIGN KEY (id) REFERENCES things(id)
+    FOREIGN KEY (id) REFERENCES things(id),
+    FOREIGN KEY (parent_id) REFERENCES comments(comment_id)
 );
-
 
