@@ -6,6 +6,7 @@ const cors = require('cors')
 const path = require('path')
 const multer = require('multer')
 const autorization = require('./middlewear/authorization')
+const router = require('express').Router()
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -29,15 +30,57 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('./'))
 
-//& CHECK IF ADMIN
+//& GET A THING AND HIS IMGS & COMMENTS
+app.get('/:id', async (req, res) => {
+    try {
+        const thingsResult = await db.query(
+            `SELECT id, name, description, score_minus, score_plus, user_id
+           FROM things 
+           WHERE id = $1`,
+            [req.params.id]
+        )
+        const things = thingsResult.rows
+        for (let i = 0; i < things.length; i++) {
+            const imgsResult = await db.query(
+                `SELECT img_id, img_url
+                FROM imgs 
+                WHERE id = $1`,
+                [things[i].id]
+            )
+            const commentsResult = await db.query(
+                `SELECT comment, user_name, date_created, comment_id FROM comments WHERE id = $1`,
+                [things[i].id]
+            )
+            const comments = commentsResult.rows
+            const imgs = imgsResult.rows
 
-// app.get('/admin', autorization, (req, res) => {
-//   try {
-//     const result = db.query('SELECT admin FROM users WHERE user_id = $1', [req.body])
-//     res.json(result)
-//   } catch (error) {
-//     console.error(error.message)
-//   }
+            things[i].imgs = imgs
+            things[i].comments = comments
+        }
+        res.json({
+            status: 'success',
+            results: thingsResult.rows.length,
+            data: {
+                things,
+            },
+        })
+    } catch (error) {
+        res.status(404).json(console.error(error.message))
+    }
+})
+
+//& CHECK IF ADMIN AND GET USER NAME
+
+// app.get('/user', autorization, async (req, res) => {
+//     try {
+//         const user = await db.query(
+//             `SELECT admin, user_name FROM users WHERE user_id = $1`,
+//             [req.user]
+//         )
+//         res.json(user.rows)
+//     } catch (error) {
+//         console.error(error.message)
+//     }
 // })
 
 //& LOGIN AND REGISTER
@@ -71,20 +114,60 @@ app.post(
 )
 
 //* GET IMG WHERE ID
-app.get('/:id/imgs', async (req, res) => {
+// app.get('/:id/imgs', async (req, res) => {
+//     try {
+//         const result = await db.query(
+//             'SELECT img_url, img_id FROM imgs WHERE id = $1',
+//             [req.params.id]
+//         )
+//         res.json({
+//             status: 'success',
+//             imgs: result.rows,
+//         })
+//     } catch (error) {
+//         console.error(error.message)
+//     }
+// })
+
+//& COMMENTS
+//* CREATE COMMENT
+app.post('/:id/post-comment', autorization, async (req, res) => {
     try {
         const result = await db.query(
-            'SELECT img_url, img_id FROM imgs WHERE id = $1',
-            [req.params.id]
+            'INSERT INTO comments(comment, parent_id, user_name, user_id, id, date_created) VALUES($1, $2, $3, $4, $5, $6) RETURNING*',
+            [
+                req.body.comment,
+                req.body.parent_id,
+                req.body.user_name,
+                req.user,
+                req.params.id,
+                req.body.date_created,
+            ]
         )
         res.json({
             status: 'success',
-            imgs: result.rows,
+            body: result.rows[0],
         })
     } catch (error) {
-        console.error(error.message)
+        res.status(404).json(console.error(error.message))
     }
 })
+
+//* GET COMMENTS FOR THING
+// app.get('/:id/get-comments', async (req, res) => {
+//     try {
+//         const result = await db.query(
+//             'SELECT comment, user_name FROM comments WHERE id = $1',
+//             [req.params.id]
+//         )
+//         res.json({
+//             status: 'success',
+//             body: result.rows,
+//         })
+//     } catch (error) {
+//         res.status(404).json(console.error(error.message))
+//     }
+// })
 
 //* DELETE IMG
 app.delete('/:id')
@@ -127,23 +210,23 @@ app.get('/page/:pid', async (req, res) => {
     }
 })
 
-//* GET A THING
-app.get('/:id', async (req, res) => {
-    try {
-        const result = await db.query('SELECT * FROM things WHERE id = $1', [
-            req.params.id,
-        ])
-        res.json({
-            status: 'success',
-            results: result.rows.length,
-            data: {
-                things: result.rows,
-            },
-        })
-    } catch (error) {
-        res.status(404).json(console.error(error.message))
-    }
-})
+// //* GET A THING
+// app.get('/:id', async (req, res) => {
+//     try {
+//         const result = await db.query('SELECT * FROM things WHERE id = $1', [
+//             req.params.id,
+//         ])
+//         res.json({
+//             status: 'success',
+//             results: result.rows.length,
+//             data: {
+//                 things: result.rows,
+//             },
+//         })
+//     } catch (error) {
+//         res.status(404).json(console.error(error.message))
+//     }
+// })
 
 //* POST THING
 app.post('/', autorization, async (req, res) => {

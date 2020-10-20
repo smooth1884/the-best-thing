@@ -24,7 +24,8 @@ const Login = ({ setAuth }) => {
             })
 
             const parsRes = await response.json()
-
+            // setUserName(parsRes.user_name)
+            // setIsAdmin(parsRes.admin)
             if (parsRes.token) {
                 // Checks if a token is there an if yes, logs in, if no throws error
                 localStorage.setItem('token', parsRes.token)

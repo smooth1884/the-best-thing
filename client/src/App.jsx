@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import Home from './routes/Home'
 import {
     BrowserRouter as Router,
@@ -19,26 +19,13 @@ import Dashboard from './components/JWT Components/Dashboard'
 import Login from './components/JWT Components/Login'
 import Register from './components/JWT Components/Register'
 import LogInOut from './components/LogInOut'
-import { useContext } from 'react'
 import FetchThings from './apis/FetchThings'
 
 toast.configure()
 
 const App = () => {
-    // const [admin, setAdmin] = useState(false)
-
-    // async function isAdmin(e) {
-    //   e.preventDefault()
-    //   try {
-    //     const response = await FetchThings.get('/admin', {
-    //       headers: {token: localStorage.token }
-    //     })
-    //     console.log(response)
-
-    //   } catch (error) {
-    //     console.error(error.message)
-    //   }
-    // }
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [userName, setUserName] = useState('')
 
     const [
         isAuthenticated,
@@ -56,9 +43,11 @@ const App = () => {
                 headers: { token: localStorage.token },
             })
 
-            const parseRes = await response.json()
+            const parsRes = await response.json()
+            setUserName(parsRes.data.user_name)
+            setIsAdmin(parsRes.data.admin)
 
-            parseRes === true
+            parsRes.auth === true
                 ? setIsAuthenticated(true)
                 : setIsAuthenticated(false)
         } catch (err) {
@@ -72,7 +61,12 @@ const App = () => {
     return (
         <div>
             <Router>
-                <LogInOut isAuthenticated={isAuthenticated} setAuth={setAuth} />
+                <LogInOut
+                    isAuthenticated={isAuthenticated}
+                    setAuth={setAuth}
+                    userName={userName}
+                    isAdmin={isAdmin}
+                />
                 <Route
                     exact
                     path="/login"
@@ -98,12 +92,24 @@ const App = () => {
                 <Route
                     exact
                     path="/"
-                    render={() => <Home isAuthenticated={isAuthenticated} />}
+                    render={() => (
+                        <Home
+                            isAuthenticated={isAuthenticated}
+                            isAdmin={isAdmin}
+                            userName={userName}
+                        />
+                    )}
                 />
                 <Route
                     exact
                     path="/:id/details"
-                    render={() => <Details isAuthenticated={isAuthenticated} />}
+                    render={() => (
+                        <Details
+                            isAuthenticated={isAuthenticated}
+                            userName={userName}
+                            isAdmin={isAdmin}
+                        />
+                    )}
                 />
             </Router>
         </div>

@@ -3,12 +3,16 @@ import Header from '../components/Header'
 import MainList from '../components/MainList'
 import { ThingsContextProvider } from '../context/ThingsContext'
 
-function Home({ isAuthenticated }) {
+function Home({ isAuthenticated, userName, isAdmin }) {
     return (
         <ThingsContextProvider>
             <div>
                 <Header />
-                <MainList isAuthenticated={isAuthenticated} />
+                <MainList
+                    isAuthenticated={isAuthenticated}
+                    userName={userName}
+                    isAdmin={isAdmin}
+                />
             </div>
         </ThingsContextProvider>
     )

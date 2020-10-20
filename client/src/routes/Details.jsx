@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { ThingsDetails } from '../components/ThingsDetails'
 
-const Details = ({ isAuthenticated }) => {
+const Details = ({ isAuthenticated, userName, isAdmin }) => {
     let history = useHistory()
     function routeChang() {
         history.push('/')
@@ -14,7 +14,11 @@ const Details = ({ isAuthenticated }) => {
                     Back
                 </button>
             </h1>
-            <ThingsDetails isAuthenticated={isAuthenticated} />
+            <ThingsDetails
+                isAuthenticated={isAuthenticated}
+                userName={userName}
+                isAdmin={isAdmin}
+            />
         </div>
     )
 }

@@ -16,6 +16,8 @@ export const ThingsContextProvider = (props) => {
     const [reloadThings, setReloadThings] = useState(false)
     const [Imgs, setImgs] = useState([])
     const [newImg, setNewImg] = useState('')
+    const [userName, setUserName] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false)
     const addThings = (thing) => {
         setThings([...things, thing])
     }

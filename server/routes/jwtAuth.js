@@ -84,10 +84,16 @@ router.post('/login', validInfo, async (req, res) => {
         }
 
         //4. give the jwt
-
         const token = jwtGenerator(user.rows[0].user_id)
-
-        res.json({ token })
+        const user_name = user.rows[0].user_name
+        const admin = user.rows[0].admin
+        res.json({
+            token,
+            data: {
+                user_name,
+                admin,
+            },
+        })
     } catch (err) {
         console.error(err.message)
     }
@@ -95,7 +101,19 @@ router.post('/login', validInfo, async (req, res) => {
 // authorization is already checking if the jwt is valid and then its passed in here:
 router.get('/verify', authorization, async (req, res) => {
     try {
-        res.json(true)
+        const user = await pool.query(
+            'SELECT user_name, admin FROM users WHERE user_id = $1',
+            [req.user]
+        )
+        const user_name = user.rows[0].user_name
+        const admin = user.rows[0].admin
+        res.json({
+            auth: true,
+            data: {
+                user_name,
+                admin,
+            },
+        })
     } catch (err) {
         console.error(err.message)
         res.status(500).send('Server Error')

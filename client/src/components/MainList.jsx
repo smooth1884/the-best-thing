@@ -6,7 +6,7 @@ import Pagination from 'react-bootstrap/Pagination'
 import AddThing from './AddThing'
 import { toast } from 'react-toastify'
 
-const MainList = ({ isAuthenticated }) => {
+const MainList = ({ isAuthenticated, userName, isAdmin }) => {
     const {
         things,
         setThings,
