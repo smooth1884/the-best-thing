@@ -48,7 +48,7 @@ app.get('/:id', async (req, res) => {
                 [things[i].id]
             )
             const commentsResult = await db.query(
-                `SELECT comment, user_name, date_created, comment_id FROM comments WHERE id = $1`,
+                `SELECT comment, user_name, date_created, comment_id FROM comments WHERE id = $1 ORDER BY date_created DESC`,
                 [things[i].id]
             )
             const comments = commentsResult.rows
@@ -69,27 +69,10 @@ app.get('/:id', async (req, res) => {
     }
 })
 
-//& CHECK IF ADMIN AND GET USER NAME
-
-// app.get('/user', autorization, async (req, res) => {
-//     try {
-//         const user = await db.query(
-//             `SELECT admin, user_name FROM users WHERE user_id = $1`,
-//             [req.user]
-//         )
-//         res.json(user.rows)
-//     } catch (error) {
-//         console.error(error.message)
-//     }
-// })
-
 //& LOGIN AND REGISTER
 
 //* register and login routes
 app.use('/auth', require('./routes/jwtAuth'))
-
-//dashboard route
-// app.use('/dashboard', require('./routes/dashboard'));
 
 //& IMGS
 //* POST IMG
@@ -112,22 +95,6 @@ app.post(
         }
     }
 )
-
-//* GET IMG WHERE ID
-// app.get('/:id/imgs', async (req, res) => {
-//     try {
-//         const result = await db.query(
-//             'SELECT img_url, img_id FROM imgs WHERE id = $1',
-//             [req.params.id]
-//         )
-//         res.json({
-//             status: 'success',
-//             imgs: result.rows,
-//         })
-//     } catch (error) {
-//         console.error(error.message)
-//     }
-// })
 
 //& COMMENTS
 //* CREATE COMMENT
@@ -153,21 +120,21 @@ app.post('/:id/post-comment', autorization, async (req, res) => {
     }
 })
 
-//* GET COMMENTS FOR THING
-// app.get('/:id/get-comments', async (req, res) => {
-//     try {
-//         const result = await db.query(
-//             'SELECT comment, user_name FROM comments WHERE id = $1',
-//             [req.params.id]
-//         )
-//         res.json({
-//             status: 'success',
-//             body: result.rows,
-//         })
-//     } catch (error) {
-//         res.status(404).json(console.error(error.message))
-//     }
-// })
+//* DELETE A COMMENT
+app.delete('/:id/delete-comment', async (req, res) => {
+    try {
+        const result = await db.query(
+            'DELETE FROM comments WHERE comment_id = $1 RETURNING *',
+            [req.params.id]
+        )
+        res.json({
+            status: 'success',
+            data: result,
+        })
+    } catch (error) {
+        res.status(404).json(console.error(error.message))
+    }
+})
 
 //* DELETE IMG
 app.delete('/:id')
@@ -209,24 +176,6 @@ app.get('/page/:pid', async (req, res) => {
         res.status(404).json(console.error(error.message))
     }
 })
-
-// //* GET A THING
-// app.get('/:id', async (req, res) => {
-//     try {
-//         const result = await db.query('SELECT * FROM things WHERE id = $1', [
-//             req.params.id,
-//         ])
-//         res.json({
-//             status: 'success',
-//             results: result.rows.length,
-//             data: {
-//                 things: result.rows,
-//             },
-//         })
-//     } catch (error) {
-//         res.status(404).json(console.error(error.message))
-//     }
-// })
 
 //* POST THING
 app.post('/', autorization, async (req, res) => {

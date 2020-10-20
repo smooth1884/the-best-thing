@@ -56,7 +56,7 @@ const App = () => {
     }
     useEffect(() => {
         isAuth()
-    }, [])
+    }, [setAuth])
 
     return (
         <div>

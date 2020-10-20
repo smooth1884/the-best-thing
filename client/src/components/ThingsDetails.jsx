@@ -130,12 +130,38 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                     <button
                         style={{ margin: '10px' }}
                         className="btn btn-success"
+                        type="submit"
+                        disabled={!comment || !isAuthenticated}
                     >
                         Post
                     </button>
                 </form>
             </div>
         )
+    }
+
+    const handleCommentDelete = async (id) => {
+        console.log(id)
+        try {
+            const response = await FetchThings.delete(`/${id}/delete-comment`)
+            console.log(response)
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    const DeleteComment = (id) => {
+        if (isAuthenticated) {
+            return (
+                <button
+                    onClick={() => handleCommentDelete(id.id)}
+                    className="btn btn-danger"
+                >
+                    Delete
+                </button>
+            )
+        }
+        return null
     }
 
     const MapComments = () => {
@@ -147,13 +173,23 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         const comment = com.comment
                         const date = com.date_created
                         const name = com.user_name
+                        const parent = com.parent_id
                         return (
                             <div key={id} style={{ border: '1px solid black' }}>
                                 <p>{name}</p>
                                 <p>{comment}</p>
-                                <p style={{ color: 'gray', fontSize: '10px' }}>
+                                <p
+                                    style={{
+                                        color: 'gray',
+                                        fontSize: '10px',
+                                    }}
+                                >
                                     {date}
                                 </p>
+                                <button className="btn btn-success">
+                                    Reply
+                                </button>
+                                <DeleteComment id={id} />
                             </div>
                         )
                     })}
