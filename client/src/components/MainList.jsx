@@ -13,6 +13,8 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         updateThing,
         setReloadThings,
         reloadThings,
+        setSearch,
+        search,
     } = useContext(ThingsContext)
     const [active, setActive] = useState(1)
     const [pages, setPages] = useState('')
@@ -20,10 +22,20 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
 
     useEffect(() => {
         const fetchData = async (pid) => {
+            console.log(search)
             try {
-                const response = await FetchThings.get(`/page/${pid}`)
-                setThings(response.data.data.things)
-                setPages(response.data.data.things[0].full_count)
+                if (search === '') {
+                    const response = await FetchThings.get(`/page/${pid}`)
+                    setThings(response.data.data.things)
+                    setPages(response.data.data.things[0].full_count)
+                } else {
+                    const response = await FetchThings.get(
+                        `/search/${search}/${pid}`
+                    )
+                    console.log(response)
+                    setThings(response.data)
+                    setPages(response.data[0].full_count)
+                }
             } catch (error) {
                 console.error(error.message)
             }
@@ -94,8 +106,38 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         )
     }
 
+    const SearchForThing = (pid) => {
+        const handleSearchSubmit = async (e) => {
+            e.preventDefault()
+            try {
+                const response = await FetchThings.get(
+                    `/search/${search}/${pid.pid}`
+                )
+                console.log(response)
+                setThings(response.data)
+                setPages(response.data[0].full_count)
+            } catch (error) {
+                console.error(error.message)
+            }
+        }
+        return (
+            <div>
+                <form onSubmit={handleSearchSubmit}>
+                    <input
+                        type="text"
+                        onChange={(e) => setSearch(e.target.value)}
+                        value={search}
+                    />
+                    <button className="btn" type="submit" disabled={!search}>
+                        Search
+                    </button>
+                </form>
+            </div>
+        )
+    }
     return (
         <div className="container-sm">
+            <SearchForThing pid={active} />
             <table className="table table-hover table-dark table table-bordered">
                 <thead>
                     <tr>

@@ -7,6 +7,7 @@ const path = require('path')
 const multer = require('multer')
 const autorization = require('./middlewear/authorization')
 const router = require('express').Router()
+const fs = require('fs')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -133,10 +134,7 @@ app.delete('/:id/delete-comment', async (req, res) => {
             'DELETE FROM comments WHERE comment_id = $1 RETURNING *',
             [req.params.id]
         )
-        res.json({
-            status: 'success',
-            data: result,
-        })
+        res.json(result.rows)
     } catch (error) {
         res.status(404).json(console.error(error.message))
     }
@@ -149,12 +147,27 @@ app.delete('/:id/delete-img', async (req, res) => {
             `DELETE FROM imgs WHERE img_id = $1 RETURNING *`,
             [req.params.id]
         )
+        fs.unlinkSync(`${result.rows[0].img_url}`)
+        res.json(result.rows)
     } catch (error) {
         res.status(404).json(console.error(error.message))
     }
 })
 
 //& THINGS
+//* GET THING BY SEACH
+app.get('/search/:search/:pid', async (req, res) => {
+    try {
+        const result = await db.query(
+            `SELECT id, name, description, score_minus, score_plus, COUNT(*) OVER() AS full_count, ROW_NUMBER () OVER ( ORDER BY score_plus - score_minus DESC) FROM things WHERE name ILIKE ('%' || $1 || '%') LIMIT $2 OFFSET $3`,
+            [req.params.search, 2, 2 * (req.params.pid - 1)]
+        )
+        res.json(result.rows)
+    } catch (error) {
+        res.status(404).json(console.error(error.message))
+    }
+})
+
 //* GET ALL THINGS
 app.get('/', async (req, res) => {
     try {

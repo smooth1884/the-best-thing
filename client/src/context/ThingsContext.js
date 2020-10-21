@@ -18,6 +18,8 @@ export const ThingsContextProvider = (props) => {
     const [newImg, setNewImg] = useState('')
     const [userName, setUserName] = useState('')
     const [isAdmin, setIsAdmin] = useState(false)
+    const [search, setSearch] = useState('')
+
     const addThings = (thing) => {
         setThings([...things, thing])
     }
@@ -49,6 +51,8 @@ export const ThingsContextProvider = (props) => {
                 newImg,
                 Imgs,
                 addImg,
+                setSearch,
+                search,
             }}
         >
             {props.children}

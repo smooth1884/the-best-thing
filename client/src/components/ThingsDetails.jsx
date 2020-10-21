@@ -12,6 +12,8 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
     const [Imgs, setImgs] = useState([])
     const [comments, setComments] = useState([])
     const [commentsWithParents, setCommentsWithParents] = useState([])
+    const [newComment, setNewComment] = useState([])
+    const [reload, setReload] = useState(false)
     const fileInput = useRef(null)
 
     useEffect(() => {
@@ -27,13 +29,13 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
             setScoreMinus(thing.score_minus)
         }
         fetchData()
-    }, [])
+    }, [newImg, newComment, reload])
 
     function AddImg() {
         if (!isAuthenticated) {
             return (
                 <p>
-                    Please <Link to="/login">Login</Link> to add a Picutre!
+                    Please <Link to="/login">in</Link> to add a Picutre!
                 </p>
             )
         }
@@ -52,8 +54,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                     data,
                     { headers: { token: localStorage.token } }
                 )
-                setNewImg(response.data.imgUrl)
-                //addImg();
+                setNewImg([response.data.imgUrl])
             } catch (error) {
                 console.error(error.message)
             }
@@ -95,6 +96,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                     },
                     { headers: { token: localStorage.token } }
                 )
+                setNewComment(response.data.body)
             } catch (error) {
                 console.error(error.message)
             }
@@ -124,6 +126,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
     const handleDeleteComment = async (id) => {
         try {
             const response = await FetchThings.delete(`/${id}/delete-comment`)
+            setReload(!reload)
         } catch (error) {
             console.error(error.message)
         }
@@ -146,6 +149,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
     const handleDeleteImg = async (id) => {
         try {
             const response = await FetchThings.delete(`/${id}/delete-img`)
+            setReload(!reload)
         } catch (error) {
             console.error(error.message)
         }
