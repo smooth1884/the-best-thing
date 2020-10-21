@@ -4,7 +4,7 @@ import FetchThings from '../apis/FetchThings'
 import { ThingsContext } from '../context/ThingsContext'
 
 const AddThing = () => {
-    const { setReloadThings, reloadTings } = useContext(ThingsContext)
+    const { setReloadThings, reloadThings } = useContext(ThingsContext)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
 
@@ -20,7 +20,7 @@ const AddThing = () => {
                 { headers: { token: localStorage.token } }
             )
             //addThings(response.data.data.things[0]);
-            setReloadThings(!reloadTings)
+            setReloadThings(!reloadThings)
         } catch (error) {
             console.error(error.message)
         }

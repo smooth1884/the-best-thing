@@ -155,7 +155,7 @@ app.delete('/:id/delete-img', async (req, res) => {
 })
 
 //& THINGS
-//* GET THING BY SEACH
+//* GET THING BY SEARCH
 app.get('/search/:search/:pid', async (req, res) => {
     try {
         const result = await db.query(

@@ -17,6 +17,17 @@ export const ThingsContextProvider = (props) => {
     const [Imgs, setImgs] = useState([])
     const [newImg, setNewImg] = useState('')
     const [search, setSearch] = useState('')
+    const [newComment, setNewComment] = useState([])
+    const [comments, setComments] = useState([])
+    const [comment, setComment] = useState('')
+
+    const appendComment = (newComment) => {
+        setComments([...comments, newComment])
+    }
+
+    const appendImg = (newImg) => {
+        setImgs([...Imgs, newImg])
+    }
 
     const addThings = (thing) => {
         setThings([...things, thing])
@@ -51,6 +62,15 @@ export const ThingsContextProvider = (props) => {
                 addImg,
                 setSearch,
                 search,
+                appendComment,
+                comments,
+                setComments,
+                setNewComment,
+                newComment,
+                setNewImg,
+                comment,
+                setComment,
+                appendImg,
             }}
         >
             {props.children}

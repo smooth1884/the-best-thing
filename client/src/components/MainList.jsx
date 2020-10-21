@@ -48,7 +48,6 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         if (isAuthenticated) {
             try {
                 const response = await FetchThings.put(`/${id}/like`)
-                // updateThing(response.data.data);
                 setReloadThings(!reloadThings)
             } catch (error) {
                 console.error(error.message)
@@ -61,7 +60,6 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         if (isAuthenticated) {
             try {
                 const response = await FetchThings.put(`/${id}/dislike`)
-                // updateThing(response.data.data);
                 setReloadThings(!reloadThings)
             } catch (error) {
                 console.error(error.message)
@@ -107,6 +105,33 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         e.preventDefault()
         setReloadThings(!reloadThings)
     }
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await FetchThings.delete(`/${id.id}`)
+            setReloadThings(!reloadThings)
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+    const AdminRemove = (id) => {
+        if (isAdmin) {
+            return (
+                <div>
+                    <button
+                        onClick={(e) => {
+                            handleDelete(id)
+                        }}
+                        className="btn btn-danger"
+                    >
+                        Delete
+                    </button>
+                </div>
+            )
+        }
+        return null
+    }
+
     return (
         <div className="container-sm">
             <form onSubmit={handleSearchSubmit}>
@@ -182,7 +207,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
                                             </svg>
                                         </h6>
                                     </td>
-                                    {/* <AdminRemove /> */}
+                                    <AdminRemove id={thing.id} />
                                 </tr>
                             )
                         })}
