@@ -4,9 +4,7 @@ import FetchThings from '../apis/FetchThings'
 import { ThingsContext } from '../context/ThingsContext'
 
 const AddThing = () => {
-    const { addThings, setReloadThings, reloadTings } = useContext(
-        ThingsContext
-    )
+    const { setReloadThings, reloadTings } = useContext(ThingsContext)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
 

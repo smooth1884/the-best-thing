@@ -1,25 +1,16 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Home from './routes/Home'
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch,
-    Redirect,
-    Link,
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { ThingsContext } from './context/ThingsContext'
 import 'react-toastify/dist/ReactToastify.css'
 
 import Details from './routes/Details'
 
 //* components
 
-import Dashboard from './components/JWT Components/Dashboard'
 import Login from './components/JWT Components/Login'
 import Register from './components/JWT Components/Register'
 import LogInOut from './components/LogInOut'
-import FetchThings from './apis/FetchThings'
 
 toast.configure()
 

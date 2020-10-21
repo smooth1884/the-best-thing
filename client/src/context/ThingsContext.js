@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react'
+import React, { useState, createContext } from 'react'
 
 export const ThingsContext = createContext()
 
@@ -16,8 +16,6 @@ export const ThingsContextProvider = (props) => {
     const [reloadThings, setReloadThings] = useState(false)
     const [Imgs, setImgs] = useState([])
     const [newImg, setNewImg] = useState('')
-    const [userName, setUserName] = useState('')
-    const [isAdmin, setIsAdmin] = useState(false)
     const [search, setSearch] = useState('')
 
     const addThings = (thing) => {

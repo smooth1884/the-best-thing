@@ -1,8 +1,6 @@
 import React from 'react'
-import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { ThingsContext } from '../context/ThingsContext'
 
 function LogInOut({ isAuthenticated, setAuth, userName, isAdmin }) {
     const logout = (e) => {

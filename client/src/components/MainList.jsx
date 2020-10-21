@@ -10,7 +10,6 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
     const {
         things,
         setThings,
-        updateThing,
         setReloadThings,
         reloadThings,
         setSearch,
@@ -22,7 +21,6 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
 
     useEffect(() => {
         const fetchData = async (pid) => {
-            console.log(search)
             try {
                 if (search === '') {
                     const response = await FetchThings.get(`/page/${pid}`)
@@ -32,7 +30,6 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
                     const response = await FetchThings.get(
                         `/search/${search}/${pid}`
                     )
-                    console.log(response)
                     setThings(response.data)
                     setPages(response.data[0].full_count)
                 }
@@ -106,38 +103,22 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         )
     }
 
-    const SearchForThing = (pid) => {
-        const handleSearchSubmit = async (e) => {
-            e.preventDefault()
-            try {
-                const response = await FetchThings.get(
-                    `/search/${search}/${pid.pid}`
-                )
-                console.log(response)
-                setThings(response.data)
-                setPages(response.data[0].full_count)
-            } catch (error) {
-                console.error(error.message)
-            }
-        }
-        return (
-            <div>
-                <form onSubmit={handleSearchSubmit}>
-                    <input
-                        type="text"
-                        onChange={(e) => setSearch(e.target.value)}
-                        value={search}
-                    />
-                    <button className="btn" type="submit" disabled={!search}>
-                        Search
-                    </button>
-                </form>
-            </div>
-        )
+    const handleSearchSubmit = async (e) => {
+        e.preventDefault()
+        setReloadThings(!reloadThings)
     }
     return (
         <div className="container-sm">
-            <SearchForThing pid={active} />
+            <form onSubmit={handleSearchSubmit}>
+                <input
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                />
+                <button className="btn" type="submit">
+                    Search
+                </button>
+            </form>
             <table className="table table-hover table-dark table table-bordered">
                 <thead>
                     <tr>
