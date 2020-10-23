@@ -246,7 +246,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         return (
                             <div key={id}>
                                 <img
-                                    src={`http://localhost:3001/${imgURL}`}
+                                    src={`${process.env.REACT_APP_API_BASE_URL}/${imgURL}`}
                                     alt=""
                                 />
                                 <DeleteImg img_id={id} />

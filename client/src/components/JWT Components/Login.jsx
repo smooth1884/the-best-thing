@@ -17,11 +17,14 @@ const Login = ({ setAuth }) => {
         e.preventDefault()
         try {
             const body = { email, password }
-            const response = await fetch('http://localhost:3001/auth/login', {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json' },
-                body: JSON.stringify(body),
-            })
+            const response = await fetch(
+                `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-type': 'application/json' },
+                    body: JSON.stringify(body),
+                }
+            )
 
             const parsRes = await response.json()
             // setUserName(parsRes.user_name)

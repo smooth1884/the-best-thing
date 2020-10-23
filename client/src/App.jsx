@@ -12,6 +12,9 @@ import Login from './components/JWT Components/Login'
 import Register from './components/JWT Components/Register'
 import LogInOut from './components/LogInOut'
 
+const dotenv = require('dotenv')
+dotenv.config()
+
 toast.configure()
 
 const App = () => {
@@ -29,10 +32,13 @@ const App = () => {
 
     async function isAuth() {
         try {
-            const response = await fetch('http://localhost:3001/auth/verify', {
-                method: 'GET',
-                headers: { token: localStorage.token },
-            })
+            const response = await fetch(
+                `${process.env.REACT_APP_API_BASE_URL}/auth/verify`,
+                {
+                    method: 'GET',
+                    headers: { token: localStorage.token },
+                }
+            )
 
             const parsRes = await response.json()
             setUserName(parsRes.data.user_name)

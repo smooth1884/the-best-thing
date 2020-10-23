@@ -1,9 +1,7 @@
 const express = require('express'),
     path = require('path')
-dotenv = require('dotenv')
+require('dotenv').config()
 app = express()
-
-dotenv.config()
 
 app.use(express.static(path.join(__dirname, 'build')))
 app.get('/*', (req, res) => {

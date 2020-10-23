@@ -6,10 +6,13 @@ const Dashboard = ({ setAuth }) => {
 
     async function getName() {
         try {
-            const response = await fetch('http://localhost:3001/dashboard', {
-                method: 'GET',
-                headers: { token: localStorage.token },
-            })
+            const response = await fetch(
+                `${process.env.REACT_APP_API_BASE_URL}/dashboard`,
+                {
+                    method: 'GET',
+                    headers: { token: localStorage.token },
+                }
+            )
             const parseRes = await response.json()
 
             setName(parseRes.user_name)
