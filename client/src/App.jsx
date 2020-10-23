@@ -12,9 +12,6 @@ import Login from './components/JWT Components/Login'
 import Register from './components/JWT Components/Register'
 import LogInOut from './components/LogInOut'
 
-const dotenv = require('dotenv')
-dotenv.config()
-
 toast.configure()
 
 const App = () => {
