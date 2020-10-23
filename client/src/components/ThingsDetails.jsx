@@ -18,7 +18,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await FetchThings.get(`/${id}`)
+            const response = await FetchThings.get(`/api/${id}`)
             const thing = response.data.data.things[0]
             setName(thing.name)
             setImgs(thing.imgs)
@@ -50,7 +50,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
             try {
                 const response = await FetchThings.post(
-                    `${id}/uploadImg`,
+                    `/api/${id}/uploadImg`,
                     data,
                     { headers: { token: localStorage.token } }
                 )
@@ -87,7 +87,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
             e.preventDefault()
             try {
                 const response = await FetchThings.post(
-                    `${id}/post-comment`,
+                    `/api/${id}/post-comment`,
                     {
                         comment,
                         parent_id: parentId,
@@ -125,7 +125,9 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
     const handleDeleteComment = async (id) => {
         try {
-            const response = await FetchThings.delete(`/${id}/delete-comment`)
+            const response = await FetchThings.delete(
+                `/api/${id}/delete-comment`
+            )
             setReload(!reload)
         } catch (error) {
             console.error(error.message)
@@ -148,7 +150,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
 
     const handleDeleteImg = async (id) => {
         try {
-            const response = await FetchThings.delete(`/${id}/delete-img`)
+            const response = await FetchThings.delete(`/api/${id}/delete-img`)
             setReload(!reload)
         } catch (error) {
             console.error(error.message)

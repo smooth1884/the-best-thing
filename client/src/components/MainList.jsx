@@ -23,12 +23,12 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         const fetchData = async (pid) => {
             try {
                 if (search === '') {
-                    const response = await FetchThings.get(`/page/${pid}`)
+                    const response = await FetchThings.get(`/api/page/${pid}`)
                     setThings(response.data.data.things)
                     setPages(response.data.data.things[0].full_count)
                 } else {
                     const response = await FetchThings.get(
-                        `/search/${search}/${pid}`
+                        `/api/search/${search}/${pid}`
                     )
                     setThings(response.data)
                     setPages(response.data[0].full_count)
@@ -47,7 +47,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
     const scorePlus = async (id) => {
         if (isAuthenticated) {
             try {
-                const response = await FetchThings.put(`/${id}/like`)
+                const response = await FetchThings.put(`/api/${id}/like`)
                 setReloadThings(!reloadThings)
             } catch (error) {
                 console.error(error.message)
@@ -59,7 +59,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
     const scoreMinus = async (id) => {
         if (isAuthenticated) {
             try {
-                const response = await FetchThings.put(`/${id}/dislike`)
+                const response = await FetchThings.put(`/api/${id}/dislike`)
                 setReloadThings(!reloadThings)
             } catch (error) {
                 console.error(error.message)
@@ -108,7 +108,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await FetchThings.delete(`/${id.id}`)
+            const response = await FetchThings.delete(`/api/${id.id}`)
             setReloadThings(!reloadThings)
         } catch (error) {
             console.error(error.message)

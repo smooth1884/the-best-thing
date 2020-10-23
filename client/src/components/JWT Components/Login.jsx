@@ -18,7 +18,7 @@ const Login = ({ setAuth }) => {
         try {
             const body = { email, password }
             const response = await fetch(
-                `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+                `${process.env.REACT_APP_API_BASE_URL}/api/auth/login`,
                 {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },

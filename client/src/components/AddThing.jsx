@@ -12,7 +12,7 @@ const AddThing = () => {
         e.preventDefault()
         try {
             const response = await FetchThings.post(
-                '/',
+                '/api',
                 {
                     name,
                     description,

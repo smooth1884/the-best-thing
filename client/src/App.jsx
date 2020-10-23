@@ -30,7 +30,7 @@ const App = () => {
     async function isAuth() {
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_BASE_URL}/auth/verify`,
+                `${process.env.REACT_APP_API_BASE_URL}/api/auth/verify`,
                 {
                     method: 'GET',
                     headers: { token: localStorage.token },

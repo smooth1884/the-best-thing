@@ -1,4 +1,3 @@
-const express = require('express')
 const router = require('express').Router() // the routers, (recieve commands from user)
 const pool = require('../db') // for the database
 const bcrypt = require('bcrypt') // for the passwort bcryption
