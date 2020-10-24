@@ -24,13 +24,24 @@ router.post('/:id/post-comment', autorization, async (req, res) => {
     }
 })
 
-router.delete('/:id/delete-comment', async (req, res) => {
+router.delete('/comment/:id/delete-comment', async (req, res) => {
     try {
         const result = await db.query(
             'DELETE FROM comments WHERE comment_id = $1 RETURNING *',
             [req.params.id]
         )
         res.json(result.rows)
+    } catch (error) {
+        res.status(404).json(console.error(error.message))
+    }
+})
+
+router.put('/comment/:id/edit', async (req, res) => {
+    try {
+        const result = await db.query(
+            'UPDATE comments SET comment = $1 WHERE comment_id = $2 RETUNRING *',
+            [req.body.comment, req.params.id]
+        )
     } catch (error) {
         res.status(404).json(console.error(error.message))
     }

@@ -35,7 +35,7 @@ const AddThing = () => {
                     data-toggle="modal"
                     data-target="#exampleModal"
                 >
-                    Add
+                    Post a Thing!
                 </button>
 
                 <div
@@ -53,7 +53,7 @@ const AddThing = () => {
                                     className="modal-title"
                                     id="exampleModalLabel"
                                 >
-                                    Add a Thing
+                                    Post a Thing
                                 </h5>
                                 <button
                                     type="button"

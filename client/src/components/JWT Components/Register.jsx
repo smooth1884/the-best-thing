@@ -46,42 +46,46 @@ const Register = ({ setAuth }) => {
         }
     }
     return (
-        <Fragment>
-            <h1 className="text-center my-5">Register</h1>
-            <form
-                onSubmit={onSubmitForm} // sets the function of the button
-            >
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="name"
-                    className="form-control my-3"
-                    value={name} // saves the input value to {name}
-                    onChange={(e) => onChange(e)} // makes it possible to change the text
-                />
-                <input
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    className="form-control my-3"
-                    value={email}
-                    onChange={(e) => onChange(e)}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="password"
-                    className="form-control my-3"
-                    value={password}
-                    onChange={(e) => onChange(e)}
-                />
-                <button className=" btn btn-success btn-block">Submit</button>
-            </form>
-            <Link style={{ paddingRight: '10px' }} to="/login">
-                Login
-            </Link>
-            <Link to="/">Cancel</Link>
-        </Fragment>
+        <div className="container-sm">
+            <Fragment>
+                <h1 className="text-center my-5">Register</h1>
+                <form
+                    onSubmit={onSubmitForm} // sets the function of the button
+                >
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="name"
+                        className="form-control my-3"
+                        value={name} // saves the input value to {name}
+                        onChange={(e) => onChange(e)} // makes it possible to change the text
+                    />
+                    <input
+                        type="text"
+                        name="email"
+                        placeholder="email"
+                        className="form-control my-3"
+                        value={email}
+                        onChange={(e) => onChange(e)}
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="password"
+                        className="form-control my-3"
+                        value={password}
+                        onChange={(e) => onChange(e)}
+                    />
+                    <button className=" btn btn-success btn-block">
+                        Submit
+                    </button>
+                </form>
+                <Link style={{ paddingRight: '10px' }} to="/login">
+                    Login
+                </Link>
+                <Link to="/">Cancel</Link>
+            </Fragment>
+        </div>
     )
 }
 

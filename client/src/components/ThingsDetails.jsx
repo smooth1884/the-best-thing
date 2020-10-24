@@ -44,6 +44,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
             e.preventDefault()
             const { files } = fileInput.current
             if (!files.length) alert('Should add an image')
+            if (files.size > 976.563) alert('Limit is 1MB!')
 
             const data = new FormData()
             data.append('img', files[0])
@@ -61,9 +62,14 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
         }
         return (
             <form onSubmit={handleSubmit}>
-                <input type="file" name="myFile" ref={fileInput} />
+                <input
+                    type="file"
+                    name="myFile"
+                    ref={fileInput}
+                    accept="image/*, image/gif"
+                />
                 <button className="btn btn-success" type="submit">
-                    Upload
+                    Upload Image
                 </button>
             </form>
         )
@@ -101,24 +107,52 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                 console.error(error.message)
             }
         }
+        const buttonText = (parent_id) => {
+            if (parent_id.parent_id) {
+                return 'Reply'
+            }
+            return 'Write a Comment'
+        }
+        const placeholder = (parent_id) => {
+            if (parent_id.parent_id) {
+                return 'Write response...'
+            }
+            return 'Write Comment...'
+        }
         return (
             <div>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        onChange={(e) => setComment(e.target.value)}
-                        value={comment}
-                    />
-                    <button
-                        onClick={() => setParentId(parent_id.parent_id)}
-                        style={{ margin: '10px' }}
-                        className="btn btn-success"
-                        type="submit"
-                        disabled={!comment || !isAuthenticated}
+                <p>
+                    <a
+                        style={{ color: 'red' }}
+                        className="btn btn-light"
+                        data-toggle="collapse"
+                        href={`#Comment${parent_id.parent_id}`}
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="collapseExample"
                     >
-                        Post
-                    </button>
-                </form>
+                        {buttonText(parent_id)}
+                    </a>
+                </p>
+                <div className="collapse" id={`Comment${parent_id.parent_id}`}>
+                    <form onSubmit={handleSubmit}>
+                        <textarea
+                            type="text"
+                            onChange={(e) => setComment(e.target.value)}
+                            value={comment}
+                            placeholder={placeholder(parent_id)}
+                        />
+                        <button
+                            onClick={() => setParentId(parent_id.parent_id)}
+                            style={{ margin: '10px' }}
+                            className="btn btn-success"
+                            type="submit"
+                            disabled={!comment || !isAuthenticated}
+                        >
+                            Submit
+                        </button>
+                    </form>
+                </div>
             </div>
         )
     }
@@ -126,7 +160,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
     const handleDeleteComment = async (id) => {
         try {
             const response = await FetchThings.delete(
-                `/api/${id}/delete-comment`
+                `/api/comment/${id}/delete-comment`
             )
             setReload(!reload)
         } catch (error) {
@@ -142,6 +176,30 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                     className="btn btn-danger"
                 >
                     Delete Comment
+                </button>
+            )
+        }
+        return null
+    }
+
+    const handleEditComment = async (id, comment) => {
+        try {
+            const response = await FetchThings.put(`/api/comment/${id}/edit`, {
+                comment,
+            })
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
+    const EditComment = (id) => {
+        if (isAdmin) {
+            return (
+                <button
+                    onClick={() => alert("This doesn't work yet~")}
+                    className="btn btn-warning"
+                >
+                    EDIT
                 </button>
             )
         }
@@ -183,8 +241,10 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         const parent = com.parent_id
                         if (parent_id.parent_id === parent) {
                             return (
-                                <div key={id}>
-                                    <p>{name}</p>
+                                <div
+                                    key={id}
+                                    style={{ borderTop: '1px solid black' }}
+                                >
                                     <p>{comment}</p>
                                     <p
                                         style={{
@@ -192,7 +252,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                                             fontSize: '10px',
                                         }}
                                     >
-                                        {date}
+                                        {name} on {date}
                                     </p>
 
                                     <DeleteComment id={id} />
@@ -216,8 +276,11 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         const date = com.date_created
                         const name = com.user_name
                         return (
-                            <div key={id} style={{ border: '1px solid black' }}>
-                                <p>{name}</p>
+                            <div
+                                key={id}
+                                className="container"
+                                style={{ border: '1px solid black' }}
+                            >
                                 <p>{comment}</p>
                                 <p
                                     style={{
@@ -225,7 +288,7 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                                         fontSize: '10px',
                                     }}
                                 >
-                                    {date}
+                                    {name} on {date}
                                 </p>
                                 <AddComment parent_id={id} />
 
@@ -246,8 +309,12 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
                         const id = img.img_id
                         const imgURL = img.img_url
                         return (
-                            <div key={id}>
+                            <div key={id} style={{ width: '640px' }}>
                                 <img
+                                    style={{
+                                        maxHeight: '100%',
+                                        maxWidth: '100%',
+                                    }}
                                     src={`${process.env.REACT_APP_API_BASE_URL}/${imgURL}`}
                                     alt=""
                                 />
@@ -260,14 +327,21 @@ export const ThingsDetails = ({ isAuthenticated, userName, isAdmin }) => {
     }
 
     return (
-        <div className="text-center">
-            <h1>{name}</h1>
-            <div>
-                <strong style={{ color: 'green' }}>{scorePlus} </strong>
-                <strong style={{ color: 'red' }}> {scoreMinus}</strong>
+        <div className="text-center" style={{ margin: '10px' }}>
+            <div className="card mx-auto" style={{ width: '18rem' }}>
+                <div className="card-body">
+                    <h5 className="card-title">{name}</h5>
+                    <h6 className="card-subtitle mb-2 text-muted">
+                        Likes:
+                        <strong style={{ color: 'green' }}>
+                            {scorePlus}{' '}
+                        </strong>{' '}
+                        Dislikes:
+                        <strong style={{ color: 'red' }}> {scoreMinus}</strong>
+                    </h6>
+                    <p className="card-text">{description}</p>
+                </div>
             </div>
-            <h3></h3>
-            <p>{description}</p>
             <AddImg newImg={newImg} />
             <AddComment />
             <MapComments />

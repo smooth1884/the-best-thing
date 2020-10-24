@@ -44,32 +44,36 @@ const Login = ({ setAuth }) => {
     }
 
     return (
-        <Fragment>
-            <h1 className="text-center my-5">Login</h1>
-            <form onSubmit={onSubmitForm}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="email"
-                    className="form-control my-3"
-                    value={email}
-                    onChange={(e) => OnChange(e)}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="password"
-                    className="form-control my-3"
-                    value={password}
-                    onChange={(e) => OnChange(e)}
-                />
-                <button className="btn btn-success btn-block">Submit</button>
-            </form>
-            <Link style={{ paddingRight: '10px' }} to="/register">
-                Register
-            </Link>
-            <Link to="/">Cancel</Link>
-        </Fragment>
+        <div className="container-sm">
+            <Fragment>
+                <h1 className="text-center my-5">Login</h1>
+                <form onSubmit={onSubmitForm}>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="email"
+                        className="form-control my-3"
+                        value={email}
+                        onChange={(e) => OnChange(e)}
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="password"
+                        className="form-control my-3"
+                        value={password}
+                        onChange={(e) => OnChange(e)}
+                    />
+                    <button className="btn btn-success btn-block">
+                        Submit
+                    </button>
+                </form>
+                <Link style={{ paddingRight: '10px' }} to="/register">
+                    Register
+                </Link>
+                <Link to="/">Cancel</Link>
+            </Fragment>
+        </div>
     )
 }
 

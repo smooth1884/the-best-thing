@@ -73,7 +73,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
         if (!isAuthenticated) {
             return (
                 <Link type="button" className="btn btn-primary" to="/login">
-                    Add
+                    Post a Thing!
                 </Link>
             )
         }
@@ -117,7 +117,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
     const AdminRemove = (id) => {
         if (isAdmin) {
             return (
-                <div>
+                <td>
                     <button
                         onClick={(e) => {
                             handleDelete(id)
@@ -126,24 +126,34 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
                     >
                         Delete
                     </button>
-                </div>
+                </td>
             )
         }
         return null
     }
 
     return (
-        <div className="container-sm">
-            <form onSubmit={handleSearchSubmit}>
-                <input
-                    type="text"
-                    onChange={(e) => setSearch(e.target.value)}
-                    value={search}
-                />
-                <button className="btn" type="submit">
+        <div className="input-group mb-3 container-sm">
+            <input
+                className="form-controll"
+                placeholder="Search for a Thing!"
+                type="text"
+                onChange={(e) => setSearch(e.target.value)}
+                value={search}
+            />
+            <div className="input-group-append">
+                <button
+                    onClick={handleSearchSubmit}
+                    className="btn btn-outline-secondary"
+                    type="submit"
+                >
                     Search
                 </button>
-            </form>
+                <div style={{ paddingLeft: '10px' }}>
+                    <AddingAllowed />
+                </div>
+            </div>
+
             <table className="table table-hover table-dark table table-bordered">
                 <thead>
                     <tr>
@@ -151,27 +161,29 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
                         <th scope="col">The Thing</th>
                         <th></th>
                         <th scope="col">Score</th>
-                        <th>
-                            <AddingAllowed />
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {things &&
-                        things.map((thing, offset) => {
+                        things.map((thing) => {
                             const plus = thing.score_plus
                             const minus = thing.score_minus
                             const score = plus - minus
-                            //const index = offset + 1;
                             const newIndex = thing.row_number
                             return (
                                 <tr key={thing.id}>
                                     <th scope="row">{newIndex}</th>
-                                    <td onClick={() => routeChange(thing.id)}>
+                                    <td
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => routeChange(thing.id)}
+                                    >
                                         {thing.name}
                                     </td>
                                     <td>
-                                        <h6 onClick={() => scorePlus(thing.id)}>
+                                        <h6
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => scorePlus(thing.id)}
+                                        >
                                             <svg
                                                 width="1em"
                                                 height="1em"
@@ -190,6 +202,7 @@ const MainList = ({ isAuthenticated, userName, isAdmin }) => {
                                     <td className="score">{score}</td>
                                     <td>
                                         <h6
+                                            style={{ cursor: 'pointer' }}
                                             onClick={() => scoreMinus(thing.id)}
                                         >
                                             <svg
